@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[25]:
-
-
 ## import modules
 import pandas as pd
 from urllib.request import urlopen
@@ -73,6 +70,7 @@ colnames = d['units']['h'].keys()
 colnames = ['timestamp', 'date', 'hour'] + list(colnames)
 df = pd.DataFrame(rows_list, columns=colnames)
 
+
 ## read existing xls file and add new data to dataframe from file
 filename = 'mav_mos_mgu.xlsx'
 try:
@@ -92,4 +90,3 @@ except:
 df.set_index('timestamp').to_excel(filename)
 
 f.close()
-
