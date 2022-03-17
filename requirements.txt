@@ -1,0 +1,4 @@
+datetime
+beautifulsoup4
+openpyxl==3.0.9
+pyTelegramBotAPI

@@ -2,7 +2,8 @@
 # coding: utf-8
 
 ### need to install
-# !pip install pyTelegramBotAPI
+# pip install bs4, pandas, openpyxl=3.0.9
+# pip install pyTelegramBotAPI
 
 ## import modules
 import pandas as pd
