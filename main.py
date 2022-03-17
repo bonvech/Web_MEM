@@ -126,13 +126,18 @@ for year in dates:
         try:  ## файл существует:
             ## read dataset from file
             df0 = pd.read_excel(filenamexls)
+
             # добавить новые строки к старым, выбросить все повторяющиеся, оставить только новые строки
-            df1 = df0.append(dfsave).drop_duplicates(keep=False)
+            #df1 = df0.append(dfsave).drop_duplicates(keep=False)
+            df1 = pd.concat([df0, dfsave], ignore_index=True).drop_duplicates(keep=False)
             # добавить новые строки в конец датасета из файла
-            dfsave = df0.append(df1, ignore_index=True).drop_duplicates()
+            #dfsave = df0.append(df1, ignore_index=True).drop_duplicates()
+            dfsave = pd.concat([df0, df1], ignore_index=True).drop_duplicates()
+
             newlines = dfsave.shape[0] - df0.shape[0]
             print(newlines, "new lines added to", filenamexls)
             flog.write(str(newlines) + " new lines added to " + filenamexls + '\n')
+            
         except:
             ## файла с данными нет - запишем все в новый файл 
             newlines = dfsave.shape[0]
@@ -149,4 +154,3 @@ for year in dates:
 
 ## close log file
 flog.close()
-
