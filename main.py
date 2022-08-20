@@ -176,6 +176,6 @@ for year in dates:
 
 
 ## close log file
-flog.write('\n')
+#flog.write('\n')
 flog.close()
 
