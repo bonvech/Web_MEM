@@ -2,8 +2,7 @@
 # coding: utf-8
 
 ### need to install
-# pip install bs4, pandas, openpyxl=3.0.9
-# pip install pyTelegramBotAPI
+# !pip install pyTelegramBotAPI
 
 ## import modules
 import pandas as pd
@@ -19,6 +18,10 @@ import config
 def select_year_month(datastring):
     return datastring.split()[0][-4:] + '_' + datastring[3:5]
 
+def print_message(message, end=''):
+    print(message)
+    flog.write(message + end)
+
 
 ## open log file
 flog = open('log.txt','a')
@@ -32,8 +35,7 @@ try:
     html = urlopen(urlname).read().decode('utf-8')
 except:
     text = "No access to the site  " + urlname
-    print(text)
-    flog.write(text + "\n")
+    print_message(text, "\n")
     flog.close()
 
     ## send alarm to info channel by bot
@@ -102,6 +104,7 @@ df = pd.DataFrame(rows_list, columns=colnames)
 ###################################################################
 ## read existing xls file and add new data to dataframe from excel file
 dirname = './data/'
+
 ## если папки нет, нужно ее создать
 try:
     os.stat(dirname)
@@ -113,36 +116,50 @@ filename = 'mav_mos_mgu'  #'mav_mos_mgu.xlsx'
 for year in dates:
     for month in dates[year]:
         ym_pattern = year + '_' + month
-        print(ym_pattern, end=' ')
+        #print(ym_pattern, end=' ')
         filenamexls = dirname + ym_pattern + '_' + filename + ".xlsx"
         filenamecsv = dirname + ym_pattern + '_' + filename + ".csv"
 
-        # отфильтровать строки за месяц и год
-        dfsave = df[df.datetime.apply(select_year_month) == ym_pattern]
-        print(dfsave.shape)
-
-        ## считать данные из существующего файла и дополнить их
-        newlines = 0
-        try:  ## файл существует:
-            ## read dataset from file
-            df0 = pd.read_excel(filenamexls)
-
-            # добавить новые строки к старым, выбросить все повторяющиеся, оставить только новые строки
-            #df1 = df0.append(dfsave).drop_duplicates(keep=False)
-            df1 = pd.concat([df0, dfsave], ignore_index=True).drop_duplicates(keep=False)
-            # добавить новые строки в конец датасета из файла
-            #dfsave = df0.append(df1, ignore_index=True).drop_duplicates()
-            dfsave = pd.concat([df0, df1], ignore_index=True).drop_duplicates()
-
-            newlines = dfsave.shape[0] - df0.shape[0]
-            print(newlines, "new lines added to", filenamexls)
-            flog.write(str(newlines) + " new lines added to " + filenamexls + '\n')
-            
+        ## проверить, существует ли файл
+        nofile = False
+        try:
+            os.stat(filenamexls)
         except:
-            ## файла с данными нет - запишем все в новый файл 
+            nofile = True
+        #print(nofile)
+
+        ## выбрать строки за нужный месяц и год
+        dfsave = df[df.datetime.apply(select_year_month) == ym_pattern]
+        print("For pattern ", ym_pattern, " there are data with shape:", dfsave.shape)
+
+        newlines = 0
+        action = "written"
+        ## если файла с данными нет - запишем все в новый файл
+        if nofile:
             newlines = dfsave.shape[0]
-            print("Excel file", filenamexls, "not found. New file will created.")
-            print(newlines, "lines writen to file ", filenamexls)
+            text = "Excel file " + filenamexls + " not found. New file will created."
+            print_message(text, "\n")
+        ## если файл есть - считать данные из существующего файла и дополнить их
+        else:
+            try:  ## файл доступен:
+                ## read dataset from file
+                df0 = pd.read_excel(filenamexls)
+                # добавить новые строки к старым, выбросить все повторяющиеся, оставить только новые строки
+                df1 = df0.append(dfsave).drop_duplicates(keep=False)
+                # добавить новые строки в конец датасета из файла
+                dfsave = df0.append(df1, ignore_index=True).drop_duplicates()
+                newlines = dfsave.shape[0] - df0.shape[0]
+                action = "added"
+            except:
+                ## файл с данными недоступен - запишем все в новый файл с временным именем
+                newlines = dfsave.shape[0]
+                text = "Data file " + filenamexls + "not available. File with new name will created."
+                print_message(text, '\n')
+                ## создать имя для нового файла
+                timestr = "_".join(str(datetime.now()).split())
+                filenamexls = filenamexls[:-4] + timestr + ".xlsx"
+                filenamecsv = filenamexls[:-3] + timestr + ".csv"
+
 
         ## save results to excel file
         #df.set_index('timestamp').to_excel(filename)
@@ -151,6 +168,14 @@ for year in dates:
             dfsave.set_index('timestamp').to_csv(filenamecsv)
             print(ym_pattern, newlines, " lines saved to", filenamexls)
 
+            text = str(newlines) + " lines " + action + " to file " + filenamexls
+            print_message(text, '\n')
+        else:
+            text = "No new data to add to file " + filenamexls
+            print_message(text, '\n')
+
 
 ## close log file
+flog.write('\n')
 flog.close()
+
