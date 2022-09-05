@@ -158,7 +158,7 @@ for year in dates:
                 ## создать имя для нового файла
                 timestr = "_".join(str(datetime.now()).split())
                 filenamexls = filenamexls[:-4] + timestr + ".xlsx"
-                filenamecsv = filenamexls[:-3] + timestr + ".csv"
+                filenamecsv = filenamecsv[:-3] + timestr + ".csv"
 
 
         ## save results to excel file
