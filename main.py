@@ -9,6 +9,8 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from datetime import datetime, date, time
 from urllib.request import urlopen
+import ssl
+
 import sys
 import os
 import telebot
@@ -27,6 +29,17 @@ def print_message(message, end=''):
 flog = open('log.txt','a')
 flog.write(str(datetime.now()) + '   ')
 print("now: ", datetime.now())
+
+
+### This code makes the verification undone so that the ssl certification is not verified.
+try:
+   _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    # Legacy Python that doesn't verify HTTPS certificates by default
+    pass
+else:
+    # Handle target environment that doesn't support HTTPS verification
+    ssl._create_default_https_context = _create_unverified_https_context
 
 
 ## read url
