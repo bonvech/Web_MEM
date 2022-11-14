@@ -40,6 +40,18 @@ def get_time_format():
 
 
 ############################################################################
+##  Get folder separator sign
+############################################################################
+def get_folder_separator():
+
+    if 'ix' in os.name:
+        sep = '/'  ## -- path separator for LINIX
+    else:
+        sep = '\\' ## -- path separator for Windows
+    return sep
+
+
+############################################################################
 ##  Prepare data to plot graphs
 ############################################################################
 def get_year_from_filename(name):
@@ -57,11 +69,11 @@ def get_year_from_filename(name):
 ##  Get data from previous_month
 ############################################################################
 def get_data_from_previous_month(name):
-    #sep = '/'
-    if 'ix' in os.name:
-        sep = '/'  ## -- path separator for LINIX
-    else:
-        sep = '\\' ## -- path separator for Windows
+    sep = get_folder_separator()
+    #if 'ix' in os.name:
+    #    sep = '/'  ## -- path separator for LINIX
+    #else:
+    #    sep = '\\' ## -- path separator for Windows
 
     ##  get actual year and month
     year, month = get_year_from_filename(name)
@@ -84,7 +96,7 @@ def get_data_from_previous_month(name):
     ## check data file
     if not os.path.exists(newname):
         print(newname, "is not found")
-        return
+        return -1
     else:
         print(newname, "exists")
 
@@ -115,8 +127,8 @@ def prepare_data(xlsfilename):
     if x.min() + pd.to_timedelta("336:00:00") > x.max():
         print("Data file has less than 2 week data")
         olddata = get_data_from_previous_month(xlsfilename)
-        #if olddata:
-            #data = pd.concat([olddata, data], ignore_index=True)
+        if type(olddata) != int:
+            data = pd.concat([olddata, data], ignore_index=True)
         #print(f"joined data: {data.shape}\n", data.head())
         ## make column to plot on x axis
         if 'Date' in data.columns:
@@ -264,6 +276,8 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
 
     plt.rcParams['xtick.labelsize'] = 8
     print(data.index.min(), data.index.max(), "delta:", data.index.max() - data.index.min())
+    xlims = (data.index.min(), data.index.max() + pd.to_timedelta("4:00:00"))
+
 
     ##########################
     ## Figure 3: 
@@ -288,7 +302,8 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
 
     ax_3.xaxis.set_major_formatter(fmt)
     #ax_3.set_xlim(left=xx.index.min())
-    ax_3.set_xlim(left=xmin)
+    #ax_3.set_xlim(left=xmin)
+    ax_3.set_xlim(xlims)
     ax_3.set_ylim(bottom=0)
     ax_3.legend() # ncol = 7, fontsize = 9)
     ax_3.grid()
@@ -330,7 +345,7 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
 
     ax_4.xaxis.set_major_formatter(fmt)
     #ax_4.set_xlim(left=zz.index.min())
-    ax_4.set_xlim(left=xmin)
+    ax_4.set_xlim(xlims)
     ax_4.set_ylim(bottom=0)
     ax_4.legend()
     ax_4.grid()
@@ -357,8 +372,9 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
 
 ## --------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
-    path_to_figures = "./figures/"
-    dirname = './data/'
+    sep = get_folder_separator()
+    path_to_figures = "." + sep + "figures" + sep
+    dirname = "." + sep + "data" + sep
     #timestamp = '2022_11'  #'2022_06'
     timestamp = str(datetime.now())[:7].replace('-', '_')
     print("timestamp:", timestamp)
@@ -387,4 +403,3 @@ if __name__ == "__main__":
 
     # create one figure with four graphs
     plot_four_figures_from_excel(datum, path_to_figures, 1, name='web_msu')
-
