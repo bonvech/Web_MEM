@@ -174,6 +174,7 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
     fmt = get_time_format()
     facecolor = 'white'
     plt.rcParams['xtick.labelsize'] = 10
+    plt.rcParams['lines.linewidth'] = 3
 
     columns = list(datum.columns[2:])
     columns.remove('plotx')
@@ -204,10 +205,16 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
         y = data[wave].replace(0, np.nan)
         ## plot
         if wave == 'CH4':
+            y = y / 100
+            ax_1.plot(x, y, label=wave + ' / 100') #color='red',
+        elif wave == 'CO':
             y = y / 10
-            ax_1.plot(x, y, color='red', label=wave + ' / 10')
-        elif i == 5:
-            ax_1.plot(x, y, color='black', label=wave)
+            ax_1.plot(x, y, label=wave + ' / 10')    
+        elif wave == 'SO2':
+            y = y * 10
+            ax_1.plot(x, y, label=wave + ' * 10')    
+        #elif i == 5:
+        #    ax_1.plot(x, y, color='black', label=wave)
         else:
             ax_1.plot(x, y, label=wave)
     ax_1.xaxis.set_major_formatter(fmt)
@@ -293,10 +300,17 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
         wave = columns[i]   # !!! 'BC' + str(i + 1)
         xx = data[wave].replace(0, np.nan)
         if wave == 'CH4':
+            xx = xx / 100
+            ax_3.plot(xx.index, xx, label=wave + ' / 100') # color='red',
+        elif wave == 'CO':
             xx = xx / 10
-            ax_3.plot(xx.index, xx, color='red', label=wave + ' / 10')
-        elif i == 5:
-            ax_3.plot(xx.index, xx, color='black', label=wave)
+            ax_3.plot(xx.index, xx, label=wave + ' / 10')
+        elif wave == 'SO2':
+            xx = xx * 10
+            ax_3.plot(xx.index, xx, label=wave + ' * 10')
+
+        #elif i == 5:
+        #    ax_3.plot(xx.index, xx, color='black', label=wave)
         else:
             ax_3.plot(xx.index, xx, label=wave)
 
