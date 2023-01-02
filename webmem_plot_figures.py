@@ -80,7 +80,7 @@ def get_data_from_previous_month(name):
     #print(year, month)
     ##  calculate previous year and month
     newmonth = month - 1 if month > 2 else 12
-    newyear = year - 1 if month == 12 else year
+    newyear = year - 1 if month == 1 else year
     #print(newyear, newmonth)
 
     ##  replace year and month in filename
@@ -151,8 +151,9 @@ def prepare_data(xlsfilename):
     data = data.drop_duplicates(keep='first')
 
     ## отсортировать данные по времени
-    data = data.sort_values(by='datetime', ascending=True)
+    data = data.sort_values(by='timestamp', ascending=True)
     #print(data.head(20))
+    print(data)
 
     return data
 

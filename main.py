@@ -158,9 +158,15 @@ for year in dates:
                 ## read dataset from file
                 df0 = pd.read_excel(filenamexls)
                 # добавить новые строки к старым, выбросить все повторяющиеся, оставить только новые строки
-                df1 = df0.append(dfsave).drop_duplicates(keep=False)
+                #df1 = df0.append(dfsave).drop_duplicates(keep=False) !!!!
+                df1 = pd.concat([df0, dfsave]).drop_duplicates(keep=False)
+
                 # добавить новые строки в конец датасета из файла
-                dfsave = df0.append(df1, ignore_index=True).drop_duplicates()
+                #dfsave = df0.append(df1, ignore_index=True).drop_duplicates()
+                dfsave = pd.concat([df0, dfsave], ignore_index=True)\
+                        .drop_duplicates() #subset=['timestamp'])\
+                        #.sort_values(by=['timestamp'])
+
                 newlines = dfsave.shape[0] - df0.shape[0]
                 action = "added"
             except:
