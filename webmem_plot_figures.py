@@ -153,7 +153,6 @@ def prepare_data(xlsfilename):
     ## отсортировать данные по времени
     data = data.sort_values(by='timestamp', ascending=True)
     #print(data.head(20))
-    print(data)
 
     return data
 
