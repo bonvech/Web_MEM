@@ -172,10 +172,10 @@ for year in dates:
             except:
                 ## файл с данными недоступен - запишем все в новый файл с временным именем
                 newlines = dfsave.shape[0]
-                text = "Data file " + filenamexls + "not available. File with new name will created."
+                text = "Data file " + filenamexls + " is not available. File with new name will created."
                 print_message(text, '\n')
                 ## создать имя для нового файла
-                timestr = "_".join(str(datetime.now()).split())
+                timestr = "_".join(str(datetime.now()).replace(':','_').split())
                 filenamexls = filenamexls[:-4] + timestr + ".xlsx"
                 filenamecsv = filenamecsv[:-3] + timestr + ".csv"
 
