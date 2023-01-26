@@ -145,21 +145,25 @@ for year in dates:
         dfsave = df[df.datetime.apply(select_year_month) == ym_pattern]
         print("For pattern ", ym_pattern, " there are data with shape:", dfsave.shape)
 
-        newlines = 0
+        #newlines = 0
+        newlines = dfsave.shape[0]
         action = "written"
         ## если файла с данными нет - запишем все в новый файл
         if nofile:
             newlines = dfsave.shape[0]
-            text = "Excel file " + filenamecsv + " not found. New file will created."
+            text = "Data file " + filenamecsv + " not found. New file will created."
             print_message(text, "\n")
+
+            ## send alarm to info channel by bot
+            bot = telebot.TeleBot(config.token, parse_mode=None)
+            bot.send_message(config.channel, text)
+
         ## если файл есть - считать данные из существующего файла и дополнить их
         else:
             try:  ## файл доступен:
                 ## read dataset from file
                 df0 = pd.read_csv(filenamecsv)
-                #df0 = pd.read_excel(filenamexls)
                 # добавить новые строки к старым, выбросить все повторяющиеся, оставить только новые строки
-                #df1 = df0.append(dfsave).drop_duplicates(keep=False) !!!!
                 df1 = pd.concat([df0, dfsave]).drop_duplicates(keep=False)
 
                 # добавить новые строки в конец датасета из файла
@@ -172,18 +176,20 @@ for year in dates:
                 action = "added"
             except:
                 ## файл с данными недоступен - запишем все в новый файл с временным именем
-                newlines = dfsave.shape[0]
-                text = "Data file " + filenamecsv + " is not available. File with new name will created."
-                #text = "Data file " + filenamexls + " is not available. File with new name will created."
-                print_message(text, '\n')
+                text = f"Data file {filenamecsv} is not available. " 
                 ## создать имя для нового файла
                 timestr = "_".join(str(datetime.now()).replace(':','_').split())
                 filenamexls = filenamexls[:-4] + timestr + ".xlsx"
                 filenamecsv = filenamecsv[:-3] + timestr + ".csv"
-
+                
+                text = text + f"New file {filenamecsv} will created."
+                print_message(text, '\n')
+                ## send alarm to info channel by bot
+                bot = telebot.TeleBot(config.token, parse_mode=None)
+                bot.send_message(config.channel, text)
+                
 
         ## save results to excel file
-        #df.set_index('timestamp').to_excel(filename)
         if newlines:
             dfsave.set_index('timestamp').to_excel(filenamexls)
             dfsave.set_index('timestamp').to_csv(filenamecsv)
@@ -195,8 +201,6 @@ for year in dates:
             text = "No new data to add to file " + filenamecsv
             print_message(text, '\n')
 
-
 ## close log file
-#flog.write('\n')
 flog.close()
 
