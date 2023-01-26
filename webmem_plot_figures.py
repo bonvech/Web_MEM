@@ -84,7 +84,8 @@ def get_data_from_previous_month(name):
     #print(newyear, newmonth)
 
     ##  replace year and month in filename
-    print(name)
+    if debug_mode:
+        print(name)
     nparts = name.split(sep)
     nfile = nparts[-1].split('_')
     nfile[0] = str(newyear)
@@ -95,10 +96,12 @@ def get_data_from_previous_month(name):
 
     ## check data file
     if not os.path.exists(newname):
-        print(newname, "is not found")
+        if debug_mode:
+            print(newname, "is not found")
         return -1
     else:
-        print(newname, "exists")
+        if debug_mode:
+            print(newname, "exists")
 
     ## get previous month data
     data = pd.read_excel(newname)
@@ -113,7 +116,7 @@ def get_data_from_previous_month(name):
 ############################################################################
 def prepare_data(xlsfilename):
     data = pd.read_excel(xlsfilename)
-    print(data.columns)
+    #print(data.columns)
 
     ##  make column to plot on x axis
     if 'Date' in data.columns:
@@ -125,7 +128,8 @@ def prepare_data(xlsfilename):
 
     ## если данных меньше, чем 2 недели, считать данные за прошлый месяц
     if x.min() + pd.to_timedelta("336:00:00") > x.max():
-        print("Data file has less than 2 week data")
+        if debug_mode:
+            print("Data file has less than 2 week data")
         olddata = get_data_from_previous_month(xlsfilename)
         if type(olddata) != int:
             data = pd.concat([olddata, data], ignore_index=True)
@@ -137,7 +141,8 @@ def prepare_data(xlsfilename):
         else:
             x = pd.to_datetime(data['datetime'], format='%d.%m.%Y %H:%M')
     else:
-        print("One file is enouth")
+        if debug_mode:
+            print("One file is enouth")
 
     data['plotx'] = x
 
@@ -164,7 +169,8 @@ def prepare_data(xlsfilename):
 ############################################################################
 ##def plot_four_figures_from_excel(self, xlsfilename)
 def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure', title="Web_MSU"):
-    print(f"Plot  {nfigs}  figures")
+    if debug_mode:
+        print(f"Plot  {nfigs}  figures")
 
     #print(path_to_figures)
     if not os.path.isdir(path_to_figures):
@@ -181,7 +187,7 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
     columns2 = ['PM10', 'PM2.5']
     columns.remove('PM10')
     columns.remove('PM2.5')
-    print(columns)
+    #print(columns)
 
     ## get 2 days data
     xmin = datum.plotx.max() - pd.to_timedelta("48:01:00")  ##  2 days
@@ -191,7 +197,7 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
     xlims = (x.min(), x.max() + pd.to_timedelta("2:00:00"))
 
     ##########################
-    ## Figure1: 7 waves
+    ## Figure1: ['CH4', 'CO', 'NO', 'NO2', 'OZ', 'SO2']
     if nfigs == 1:
         fig = plt.figure(figsize=(16, 12))
         ax_1 = fig.add_subplot(3, 1, 1)
@@ -200,7 +206,7 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
         ax_1 = fig.add_subplot(1, 1, 1)
 
     for i in range(len(columns)):
-        wave = columns[i]   # !!! 'BC' + str(i + 1)
+        wave = columns[i]   
         #print(wave)
         y = data[wave].replace(0, np.nan)
         ## plot
@@ -224,7 +230,7 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
     ax_1.set_title(title, loc='right')
     ax_1.grid()
 
-    ## save to file "ae33_bc_waves.png"
+    ## save to files
     if nfigs != 1:
         plotname = path_to_figures + name + '_all_day'
         fig.savefig(plotname + '.svg', facecolor=facecolor, bbox_inches='tight')
@@ -232,7 +238,7 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
 
 
     ##########################
-    ## Figure 2: two first
+    ## Figure 2: PM10, PM2
     if nfigs == 1:
         ax_2 = fig.add_subplot(3, 1, 2)
     else:
@@ -246,11 +252,11 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
         y = data[wave].replace(0, np.nan)
         #if i == 0:  # !!! "BCff"
         if wave == 'PM10':
-            color = 'black'
-        else:       # !!! "BCbb"
-            color = 'orange'
+            color = 'dimgray'
+        else:      
+            color = 'mediumorchid'
         ax_2.plot(x, y, color=color, label=wave)
-        ax_2.fill_between(x, y, np.zeros_like(y), color=color)
+        #ax_2.fill_between(x, y, np.zeros_like(y), color=color)
 
     ax_2.xaxis.set_major_formatter(fmt)
     ax_2.set_xlim(xlims)
@@ -269,7 +275,8 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
     #####################################
     ## Make average by three points
     data = average_by_three(datum)
-    print(data.head(6))
+    if debug_mode:
+        print(data.head(2))
     ## get only last two weeks
     xmin = data.index.max() - pd.to_timedelta("336:00:00") ## 14 days
     data = data[data.index >= xmin]
@@ -282,12 +289,13 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
         fmt = dates.DateFormatter('%d/%m/%Y')
 
     plt.rcParams['xtick.labelsize'] = 8
-    print(data.index.min(), data.index.max(), "delta:", data.index.max() - data.index.min())
+    if debug_mode:
+        print(data.index.min(), data.index.max(), "delta:", data.index.max() - data.index.min())
     xlims = (data.index.min(), data.index.max() + pd.to_timedelta("4:00:00"))
 
 
     ##########################
-    ## Figure 3: 
+    ## Figure 3: ['CH4', 'CO', 'NO', 'NO2', 'OZ', 'SO2']
     if nfigs == 1:
         ax_3 = fig.add_subplot(3, 2, 5)
         #ax_3 = fig.add_subplot(4, 2, 7)
@@ -297,7 +305,7 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
 
 
     for i in range(len(columns)):
-        wave = columns[i]   # !!! 'BC' + str(i + 1)
+        wave = columns[i]   # 
         xx = data[wave].replace(0, np.nan)
         if wave == 'CH4':
             xx = xx / 100
@@ -308,9 +316,6 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
         elif wave == 'SO2':
             xx = xx * 10
             ax_3.plot(xx.index, xx, label=wave + ' * 10')
-
-        #elif i == 5:
-        #    ax_3.plot(xx.index, xx, color='black', label=wave)
         else:
             ax_3.plot(xx.index, xx, label=wave)
 
@@ -330,31 +335,21 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
 
 
     ##########################
-    ## Figure 4: BCff BCbb
+    ## Figure 4: PM10, PM2
     if nfigs == 1:
         ax_4 = fig.add_subplot(3, 2, 6)
     else:
         fig = plt.figure(figsize=(8, 4))
         ax_4 = fig.add_subplot(1, 1, 1)
 
-    #yy = data["BCff"].replace(0, np.nan)
-    #zz = data["BCbb"].replace(0, np.nan)
-    #ax_4.plot(yy, 'k', label='BCff')
-    #ax_4.fill_between(yy.index, yy, np.zeros_like(yy), color='black')
-    #ax_4.plot(zz, 'orange', label='BCbb')
-    #ax_4.fill_between(zz.index, zz, np.zeros_like(zz), color='orange')
-
-    #for i in range(2):
-        #wave = columns[i]   # !!! 'BC' + str(i + 1)
     for wave in ['PM10', 'PM2.5']:
         yy = data[wave].replace(0, np.nan)
-        #if i == 0:  # !!! "BCff"
         if wave == 'PM10':
-            color = 'black'
-        else:       # !!! "BCbb"
-            color = 'orange'
+            color = 'dimgray'
+        else:      
+            color = 'mediumorchid'
         ax_4.plot(yy, color=color, label=wave)
-        ax_4.fill_between(yy.index, yy, np.zeros_like(yy), color=color)
+        #ax_4.fill_between(yy.index, yy, np.zeros_like(yy), color=color)
 
 
     ax_4.xaxis.set_major_formatter(fmt)
@@ -364,7 +359,7 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
     ax_4.legend()
     ax_4.grid()
 
-    ## save one figure to file "ae33_bc_week.png"
+    ## save one figure to files
     if nfigs != 1:
         ax_4.set_title(title, loc='right')
         plotname = path_to_figures + name + '_2_week'
@@ -386,20 +381,24 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
 
 ## --------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
+    debug_mode = False
     sep = get_folder_separator()
     path_to_figures = "." + sep + "figures" + sep
     dirname = "." + sep + "data" + sep
-    #timestamp = '2022_11'  #'2022_06'
-    timestamp = str(datetime.now())[:7].replace('-', '_')
-    print("timestamp:", timestamp)
+    
+    timestamp = str(datetime.now())[:7].replace('-', '_')    #'2022_11'  #'2022_06'
+    if debug_mode:
+        print("timestamp:", timestamp)
     filename = timestamp + '_mav_mos_mgu.xlsx'
     xlsfilename = dirname + filename
 
     ## check data file
     if not os.path.exists(xlsfilename):
-        print(xlsfilename, "is not found")
+        #if debug_mode:
+            print(xlsfilename, "is not found")
     else:
-        print(xlsfilename, "exists")
+        if debug_mode:
+            print(xlsfilename, "exists")
 
     ## check path to figures
     #print(path_to_figures)
@@ -409,7 +408,8 @@ if __name__ == "__main__":
 
     ## read and prepare data
     datum = prepare_data(xlsfilename)
-    print(datum.head(10))
+    if debug_mode:
+        print(datum.head(2))
 
 
     # create four figures
