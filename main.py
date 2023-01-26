@@ -50,7 +50,6 @@ except:
     text = "No access to the site  " + urlname
     print_message(text, "\n")
     flog.close()
-
     ## send alarm to info channel by bot
     bot = telebot.TeleBot(config.token, parse_mode=None)
     bot.send_message(config.channel, text)
@@ -136,7 +135,8 @@ for year in dates:
         ## проверить, существует ли файл
         nofile = False
         try:
-            os.stat(filenamexls)
+            #os.stat(filenamexls)
+            os.stat(filenamecsv)
         except:
             nofile = True
         #print(nofile)
@@ -150,13 +150,14 @@ for year in dates:
         ## если файла с данными нет - запишем все в новый файл
         if nofile:
             newlines = dfsave.shape[0]
-            text = "Excel file " + filenamexls + " not found. New file will created."
+            text = "Excel file " + filenamecsv + " not found. New file will created."
             print_message(text, "\n")
         ## если файл есть - считать данные из существующего файла и дополнить их
         else:
             try:  ## файл доступен:
                 ## read dataset from file
-                df0 = pd.read_excel(filenamexls)
+                df0 = pd.read_csv(filenamecsv)
+                #df0 = pd.read_excel(filenamexls)
                 # добавить новые строки к старым, выбросить все повторяющиеся, оставить только новые строки
                 #df1 = df0.append(dfsave).drop_duplicates(keep=False) !!!!
                 df1 = pd.concat([df0, dfsave]).drop_duplicates(keep=False)
@@ -172,7 +173,8 @@ for year in dates:
             except:
                 ## файл с данными недоступен - запишем все в новый файл с временным именем
                 newlines = dfsave.shape[0]
-                text = "Data file " + filenamexls + " is not available. File with new name will created."
+                text = "Data file " + filenamecsv + " is not available. File with new name will created."
+                #text = "Data file " + filenamexls + " is not available. File with new name will created."
                 print_message(text, '\n')
                 ## создать имя для нового файла
                 timestr = "_".join(str(datetime.now()).replace(':','_').split())
@@ -185,12 +187,12 @@ for year in dates:
         if newlines:
             dfsave.set_index('timestamp').to_excel(filenamexls)
             dfsave.set_index('timestamp').to_csv(filenamecsv)
-            print(ym_pattern, newlines, " lines saved to", filenamexls)
+            print(ym_pattern, newlines, " lines saved to", filenamecsv)
 
-            text = str(newlines) + " lines " + action + " to file " + filenamexls
+            text = str(newlines) + " lines " + action + " to file " + filenamecsv
             print_message(text, '\n')
         else:
-            text = "No new data to add to file " + filenamexls
+            text = "No new data to add to file " + filenamecsv
             print_message(text, '\n')
 
 
