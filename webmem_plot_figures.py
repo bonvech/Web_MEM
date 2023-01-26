@@ -70,14 +70,10 @@ def get_year_from_filename(name):
 ############################################################################
 def get_data_from_previous_month(name):
     sep = get_folder_separator()
-    #if 'ix' in os.name:
-    #    sep = '/'  ## -- path separator for LINIX
-    #else:
-    #    sep = '\\' ## -- path separator for Windows
 
     ##  get actual year and month
     year, month = get_year_from_filename(name)
-    #print(year, month)
+
     ##  calculate previous year and month
     newmonth = month - 1 if month > 2 else 12
     newyear = year - 1 if month == 1 else year
@@ -104,7 +100,8 @@ def get_data_from_previous_month(name):
             print(newname, "exists")
 
     ## get previous month data
-    data = pd.read_excel(newname)
+    #data = pd.read_excel(newname)
+    data = pd.read_csv(newname)
 
     return data
 
@@ -115,7 +112,8 @@ def get_data_from_previous_month(name):
 ##  get 2 week data from data files
 ############################################################################
 def prepare_data(xlsfilename):
-    data = pd.read_excel(xlsfilename)
+    #data = pd.read_excel(xlsfilename)
+    data = pd.read_csv(xlsfilename)
     #print(data.columns)
 
     ##  make column to plot on x axis
@@ -167,7 +165,6 @@ def prepare_data(xlsfilename):
 ## Create plots from excel file with Aethalometer data
 #  @param nfigs - number of files to create
 ############################################################################
-##def plot_four_figures_from_excel(self, xlsfilename)
 def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure', title="Web_MSU"):
     if debug_mode:
         print(f"Plot  {nfigs}  figures")
@@ -389,7 +386,8 @@ if __name__ == "__main__":
     timestamp = str(datetime.now())[:7].replace('-', '_')    #'2022_11'  #'2022_06'
     if debug_mode:
         print("timestamp:", timestamp)
-    filename = timestamp + '_mav_mos_mgu.xlsx'
+    #filename = timestamp + '_mav_mos_mgu.xlsx'
+    filename = timestamp + '_mav_mos_mgu.csv'
     xlsfilename = dirname + filename
 
     ## check data file
