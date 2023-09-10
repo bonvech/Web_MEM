@@ -72,15 +72,18 @@ stop = chart[: chart.find('{"month')].rfind(',')
 comm = 'd = ' + chart[start : stop]
 comm = comm.replace('null', '0')
 exec(comm) ## make dict d form string
-# print(type(d), list(key for key in d.keys()))
+#print(type(d), list(key for key in d.keys()))
+#print(type(d), list(key for key in d['units']['h'].keys()))
 
 
 ## collect data to table
 rows_list = []
 dates = dict()
-for i in range(len(d['units']['h']['CH4']['data'])):
+some_key = list(d['units']['h'].keys())[0]
+#print(some_key)
+for i in range(len(d['units']['h'][some_key]['data'])):
     array = []
-    sectime = d['units']['h']['CH4']['data'][i][0] // 1000
+    sectime = d['units']['h'][some_key]['data'][i][0] // 1000
     dt = datetime.utcfromtimestamp(sectime)
     print(i, sectime, dt.strftime("%d.%m.%Y %H:%M")) #, end=' ')
     array.append(sectime)

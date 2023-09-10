@@ -205,6 +205,10 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
     for i in range(len(columns)):
         wave = columns[i]   
         #print(wave)
+        y = data[wave].replace(np.nan, 0)
+        #print(wave, y.shape, all(y.values), set(y.values))
+        if not any(y.values):
+            continue        
         y = data[wave].replace(0, np.nan)
         ## plot
         if wave == 'CH4':
@@ -303,6 +307,11 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
 
     for i in range(len(columns)):
         wave = columns[i]   # 
+        xx = data[wave].replace(np.nan, 0)
+        #print(wave, xx.shape, all(xx.values), xx.values)
+        if not any(xx.values):
+            continue        
+
         xx = data[wave].replace(0, np.nan)
         if wave == 'CH4':
             xx = xx / 100
@@ -380,8 +389,8 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
 if __name__ == "__main__":
     debug_mode = False
     sep = get_folder_separator()
-    path_to_figures = "." + sep + "figures" + sep
     dirname = "." + sep + "data" + sep
+    path_to_figures = "." + sep + "figures" + sep
     
     timestamp = str(datetime.now())[:7].replace('-', '_')    #'2022_11'  #'2022_06'
     if debug_mode:
