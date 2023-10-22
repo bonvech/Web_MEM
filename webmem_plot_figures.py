@@ -176,6 +176,8 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
 
     ## format graph
     fmt = get_time_format()
+    locator = matplotlib.dates.AutoDateLocator(minticks=20, maxticks=30)
+    labelrotation=0
     facecolor = 'white'
     plt.rcParams['xtick.labelsize'] = 10
     plt.rcParams['lines.linewidth'] = 3
@@ -225,13 +227,16 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
         #    ax_1.plot(x, y, color='black', label=wave)
         else:
             ax_1.plot(x, y, label=wave)
+
     ax_1.set_xlim(xlims)
     ax_1.set_ylim(bottom=0)
     ax_1.legend()
     ax_1.set_title(title, loc='right')
+   
+    # Повернем метки рисок на 55 градусов
+    ax_1.tick_params(axis='x', labelrotation=labelrotation)
     
     ax_1.xaxis.set_major_formatter(fmt)
-    locator = matplotlib.dates.AutoDateLocator(minticks=20, maxticks=30)
     ax_1.xaxis.set_minor_locator(locator)
     ax_1.grid(which='major', alpha=0.9)
     ax_1.grid(which='minor', alpha=0.5, linestyle='--')
@@ -252,8 +257,6 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
         fig = plt.figure(figsize=(10, 5))
         ax_2 = fig.add_subplot(1, 1, 1)
 
-    #for i in range(2):
-        #wave = columns[i]   # !!! 'BC' + str(i + 1)
     for wave in ['PM10', 'PM2.5']:
         #print(wave)
         y = data[wave].replace(0, np.nan)
@@ -269,8 +272,9 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
     ax_2.set_ylim(bottom=0)
     ax_2.legend()
     
+    ax_2.tick_params(axis='x', labelrotation=labelrotation)
+    
     ax_2.xaxis.set_major_formatter(fmt)
-    locator = matplotlib.dates.AutoDateLocator(minticks=20, maxticks=30)
     ax_2.xaxis.set_minor_locator(locator)
     ax_2.grid(which='major', alpha=0.9)
     ax_2.grid(which='minor', alpha=0.5, linestyle='--')
@@ -312,7 +316,7 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
         ax_3 = fig.add_subplot(3, 2, 5)
         #ax_3 = fig.add_subplot(4, 2, 7)
     else:
-        fig = plt.figure(figsize=(8, 4))
+        fig = plt.figure(figsize=(10, 5))
         ax_3 = fig.add_subplot(1, 1, 1)
 
 
@@ -342,8 +346,9 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
     ax_3.set_ylim(bottom=0)
     ax_3.legend() # ncol = 7, fontsize = 9)
     
+    ax_3.tick_params(axis='x', labelrotation=labelrotation)
+    
     ax_3.xaxis.set_major_formatter(fmt)
-    #locator = matplotlib.dates.AutoDateLocator(minticks=50, maxticks=50)
     ax_3.xaxis.set_minor_locator(locator)
     ax_3.grid(which='major', alpha=0.9)
     ax_3.grid(which='minor', alpha=0.5, linestyle='--')
@@ -352,7 +357,7 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
     if nfigs != 1:
         ax_3.set_title(title, loc='right')
         plotname = path_to_figures + name + '_all_week'
-        fig.savefig(plotname + '.png', facecolor=facecolor, bbox_inches='tight')
+        fig.savefig(plotname + '.png', facecolor=facecolor) #, bbox_inches='tight')
         #fig.savefig(path_to_figures + 'ae33_bc_waves_week.png', facecolor=facecolor) 
 
 
@@ -361,7 +366,7 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
     if nfigs == 1:
         ax_4 = fig.add_subplot(3, 2, 6)
     else:
-        fig = plt.figure(figsize=(8, 4))
+        fig = plt.figure(figsize=(10, 5))
         ax_4 = fig.add_subplot(1, 1, 1)
 
     for wave in ['PM10', 'PM2.5']:
@@ -373,11 +378,12 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
         ax_4.plot(yy, color=color, label=wave)
         #ax_4.fill_between(yy.index, yy, np.zeros_like(yy), color=color)
 
-
     #ax_4.set_xlim(left=zz.index.min())
     ax_4.set_xlim(xlims)
     ax_4.set_ylim(bottom=0)
     ax_4.legend()
+    
+    ax_4.tick_params(axis='x', labelrotation=labelrotation)
     
     ax_4.xaxis.set_major_formatter(fmt)
     ax_4.xaxis.set_minor_locator(locator)
@@ -389,7 +395,7 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
         ax_4.set_title(title, loc='right')
         plotname = path_to_figures + name + '_2_week'
         #fig.savefig(plotname + '.svg', facecolor=facecolor, bbox_inches='tight') 
-        fig.savefig(plotname + '.png', facecolor=facecolor, bbox_inches='tight') 
+        fig.savefig(plotname + '.png', facecolor=facecolor) #, bbox_inches='tight') 
 
 
     #####################################
