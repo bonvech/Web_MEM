@@ -51,8 +51,11 @@ except:
     print_message(text, "\n")
     flog.close()
     ## send alarm to info channel by bot
-    bot = telebot.TeleBot(config.token, parse_mode=None)
-    bot.send_message(config.channel, text)
+    try:
+        bot = telebot.TeleBot(config.token, parse_mode=None)
+        bot.send_message(config.channel, text)
+    except:
+        pass
 
     ## работаем ли мы в питоне или notebook? 
     sys.exit("No access to the site  " + urlname + "\n")
@@ -79,6 +82,7 @@ exec(comm) ## make dict d form string
 ## collect data to table
 rows_list = []
 dates = dict()
+print(d['units']['h'])
 some_key = list(d['units']['h'].keys())[0]
 #print(some_key)
 for i in range(len(d['units']['h'][some_key]['data'])):
@@ -150,23 +154,26 @@ for year in dates:
 
         #newlines = 0
         newlines = dfsave.shape[0]
+        
         action = "written"
         ## если файла с данными нет - запишем все в новый файл
         if nofile:
             newlines = dfsave.shape[0]
-            text = "Data file " + filenamecsv + " not found. New file will created."
+            text = "Data file " + filenamecsv + " not found. New file created."
             print_message(text, "\n")
 
             ## send alarm to info channel by bot
-            bot = telebot.TeleBot(config.token, parse_mode=None)
-            bot.send_message(config.channel, text)
-
+            try:
+                bot = telebot.TeleBot(config.token, parse_mode=None)
+                bot.send_message(config.channel, text)
+            except:
+                pass ## \todo
         ## если файл есть - считать данные из существующего файла и дополнить их
         else:
-            try:  ## файл доступен:
-                ## read dataset from file
+            try:  ##  файл доступен:
+                ##  read dataset from file
                 df0 = pd.read_csv(filenamecsv)
-                # добавить новые строки к старым, выбросить все повторяющиеся, оставить только новые строки
+                ##  добавить новые строки к старым, выбросить все повторяющиеся, оставить только новые строки
                 df1 = pd.concat([df0, dfsave]).drop_duplicates(keep=False)
 
                 # добавить новые строки в конец датасета из файла
@@ -188,8 +195,11 @@ for year in dates:
                 text = text + f"New file {filenamecsv} will created."
                 print_message(text, '\n')
                 ## send alarm to info channel by bot
-                bot = telebot.TeleBot(config.token, parse_mode=None)
-                bot.send_message(config.channel, text)
+                try:
+                    bot = telebot.TeleBot(config.token, parse_mode=None)
+                    bot.send_message(config.channel, text)
+                except:
+                    pass ## \todo
                 
 
         ## save results to excel file
