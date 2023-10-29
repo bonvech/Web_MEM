@@ -101,6 +101,7 @@ exec(comm) ## make dict d form string
 
 datum = d['units']['h']
 
+
 ####################################
 ## collect data to table
 
@@ -135,12 +136,18 @@ for i in range(len(datum[some_key]['data'])): ## читать все строк�
     dates[year].add(month) 
 
     ## fill row array with detectors data
+    nulls = 0
     for param in datum.keys():
-        array[param] = (datum[param]['data'][i][1])
+        value = datum[param]['data'][i][1]
+        array[param] = value
+        if value == 0:
+            nulls += 1
+    
     #print("==>", array)
+    if len(datum.keys()) == nulls: 
+        continue
 
     ## add row to the dataframe
-    #print(pd.Series(array))
     df = pd.concat([df, pd.Series(array).to_frame().T], ignore_index=True)
 
 #print(dates)
