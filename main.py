@@ -22,46 +22,67 @@ def select_year_month(datastring):
 
 def print_message(message, end=''):
     print(message)
-    flog.write(message + end)
+    with open(logfilename,'a') as flog:
+        flog.write(str(datetime.now()) + '   ')
+        flog.write(message + end)
+
+## ----------------------------------------------------------------
+##  write message to bot
+## ----------------------------------------------------------------
+def write_to_bot(text):
+    try:
+        bot = telebot.TeleBot(config.token, parse_mode=None)
+        bot.send_message(config.channel, text)
+    except Exception as err:
+        ##  напечатать строку ошибки
+        text = f": ERROR in writing to bot: {err}"
+        print_message(text)  ## write to log file
 
 
-## open log file
-flog = open('log.txt','a')
-flog.write(str(datetime.now()) + '   ')
+###################################################################
+###################################################################
+dirname = './data/'
+filename_prefix = 'mav_mos_mgu'  
+logfilename = dirname + "_".join(["_".join(str(datetime.now()).split('-')[:2]), filename_prefix,  'log.txt'])
 print("now: ", datetime.now())
 
+##  если папки c данными нет, нужно ее создать
+try:
+    os.stat(dirname)
+except OSError:
+    os.mkdir(dirname)
 
-### This code makes the verification undone so that the ssl certification is not verified.
+
+####################################
+##  This code makes the verification undone so that the ssl certification is not verified.
 try:
    _create_unverified_https_context = ssl._create_unverified_context
 except AttributeError:
-    # Legacy Python that doesn't verify HTTPS certificates by default
-    pass
+    ## Legacy Python that doesn't verify HTTPS certificates by default
+    message = "Legacy Python that doesn't verify HTTPS certificates by default"
+    print_message(message, end='\n')
 else:
-    # Handle target environment that doesn't support HTTPS verification
+    ## Handle target environment that doesn't support HTTPS verification
     ssl._create_default_https_context = _create_unverified_https_context
 
 
-## read url
+####################################
+##  open url
 urlname = "https://mosecom.mos.ru/mgu/"
 try:
     html = urlopen(urlname).read().decode('utf-8')
 except:
     text = "No access to the site  " + urlname
     print_message(text, "\n")
-    flog.close()
     ## send alarm to info channel by bot
-    try:
-        bot = telebot.TeleBot(config.token, parse_mode=None)
-        bot.send_message(config.channel, text)
-    except:
-        pass
-
+    write_to_bot(text)
+    
     ## работаем ли мы в питоне или notebook? 
     sys.exit("No access to the site  " + urlname + "\n")
 
 
-## parse html and find 'AirCharts.init' chart 
+####################################
+##  parse html and find 'AirCharts.init' chart 
 soup = BeautifulSoup(html, 'html.parser')
 for link in soup.find_all('script'):
     w = str(link)
@@ -78,106 +99,93 @@ exec(comm) ## make dict d form string
 #print(type(d), list(key for key in d.keys()))
 #print(type(d), list(key for key in d['units']['h'].keys()))
 
+datum = d['units']['h']
 
+####################################
 ## collect data to table
 rows_list = []
 dates = dict()
-print(d['units']['h'])
-some_key = list(d['units']['h'].keys())[0]
-#print(some_key)
-for i in range(len(d['units']['h'][some_key]['data'])):
+some_key = list(datum.keys())[0] ## первый  параметр в списке
+print('some_key:',  list(datum.keys()))
+for i in range(len(datum[some_key]['data'])): ## читать все строки
     array = []
-    sectime = d['units']['h'][some_key]['data'][i][0] // 1000
+    sectime = datum[some_key]['data'][i][0] // 1000
     dt = datetime.utcfromtimestamp(sectime)
     print(i, sectime, dt.strftime("%d.%m.%Y %H:%M")) #, end=' ')
     array.append(sectime)
     array.append(dt.strftime("%d.%m.%Y %H:%M"))
-    ## !!!!!!!!!!!!!!!!! утрать !!!!!!!!!!!
-    #array.append(dt.strftime("%d.%m.%Y"))
-    #array.append(int(dt.strftime("%H")))
-    ## !!!!!!!!!!!!!!!!!
-    # update dates set
-    year = array[1].split()[0][-4:]
+    ## update set of dates
+    year  = array[1].split()[0][-4:]
     month = array[1][3:5]
     dates[year] = dates.get(year, set())
     dates[year].add(month) 
 
     ## fill row array with detectors data
-    for param in d['units']['h'].keys():
-        #print(d['units']['h'][param]['data'][i][1], end=' ')
-        array.append(d['units']['h'][param]['data'][i][1])
-    #print(array)
+    for param in datum.keys():
+        #print(datum[param]['data'][i][1], end=' ')
+        array.append(datum[param]['data'][i][1])
+    #print("==>", array)
 
     ## add row to the table rows_list
     rows_list.append(array)
 
-##print(*rows_list, sep="\n")
+print(dates)
+#print(*rows_list, sep="\n")
+##sys.exit("Test stop running")
 
-## sys.exit("Test stop running")
-## преобразовать данные в dataframe df
-colnames = d['units']['h'].keys()
+##  преобразовать данные в dataframe df
+colnames = datum.keys()
 colnames = ['timestamp', 'datetime'] + list(colnames)
 df = pd.DataFrame(rows_list, columns=colnames)
 
+##  reformat dataframe to standart columns
+standart_columns = ['timestamp','datetime','CH4','CO','NO','NO2','OZ','PM10','PM2.5','SO2']
+extra_columns = list(set(colnames) - (set(colnames) & set(standart_columns)))
+if extra_columns:
+    text = f"Warning! New parameter in site {urlname} data: {extra_columns}"
+    write_to_bot(text)
+    columns = standart_columns + extra_columns
+    #print(columns)
+    
+##  create new dataframe with all columns
+# columns
 
-###################################################################
-## read existing xls file and add new data to dataframe from excel file
-dirname = './data/'
-
-## если папки нет, нужно ее создать
-try:
-    os.stat(dirname)
-except OSError:
-    os.mkdir(dirname)
-
-
-filename = 'mav_mos_mgu'  #'mav_mos_mgu.xlsx'
+####################################
+##  read existing csv file and add new data to dataframe from csv file
 for year in dates:
     for month in dates[year]:
         ym_pattern = year + '_' + month
         #print(ym_pattern, end=' ')
-        filenamexls = dirname + ym_pattern + '_' + filename + ".xlsx"
-        filenamecsv = dirname + ym_pattern + '_' + filename + ".csv"
+        filenamexls = dirname + ym_pattern + '_' + filename_prefix + ".xlsx"
+        filenamecsv = dirname + ym_pattern + '_' + filename_prefix + ".csv"
 
-        ## проверить, существует ли файл
+        ##  проверить, существует ли файл
         nofile = False
         try:
-            #os.stat(filenamexls)
             os.stat(filenamecsv)
         except:
             nofile = True
-        #print(nofile)
 
         ## выбрать строки за нужный месяц и год
         dfsave = df[df.datetime.apply(select_year_month) == ym_pattern]
         print("For pattern ", ym_pattern, " there are data with shape:", dfsave.shape)
 
-        #newlines = 0
-        newlines = dfsave.shape[0]
-        
+        newlines = dfsave.shape[0]    
         action = "written"
         ## если файла с данными нет - запишем все в новый файл
         if nofile:
             newlines = dfsave.shape[0]
             text = "Data file " + filenamecsv + " not found. New file created."
             print_message(text, "\n")
-
             ## send alarm to info channel by bot
-            try:
-                bot = telebot.TeleBot(config.token, parse_mode=None)
-                bot.send_message(config.channel, text)
-            except:
-                pass ## \todo
+            write_to_bot(text)
+            
         ## если файл есть - считать данные из существующего файла и дополнить их
         else:
             try:  ##  файл доступен:
                 ##  read dataset from file
                 df0 = pd.read_csv(filenamecsv)
-                ##  добавить новые строки к старым, выбросить все повторяющиеся, оставить только новые строки
-                df1 = pd.concat([df0, dfsave]).drop_duplicates(keep=False)
-
-                # добавить новые строки в конец датасета из файла
-                #dfsave = df0.append(df1, ignore_index=True).drop_duplicates()
+                ##  добавить новые строки в конец датасета из файла, выбросить все повторяющиеся
                 dfsave = pd.concat([df0, dfsave], ignore_index=True)\
                         .drop_duplicates() #subset=['timestamp'])\
                         #.sort_values(by=['timestamp'])
@@ -195,11 +203,7 @@ for year in dates:
                 text = text + f"New file {filenamecsv} will created."
                 print_message(text, '\n')
                 ## send alarm to info channel by bot
-                try:
-                    bot = telebot.TeleBot(config.token, parse_mode=None)
-                    bot.send_message(config.channel, text)
-                except:
-                    pass ## \todo
+                write_to_bot(text)
                 
 
         ## save results to excel file
@@ -213,7 +217,3 @@ for year in dates:
         else:
             text = "No new data to add to file " + filenamecsv
             print_message(text, '\n')
-
-## close log file
-flog.close()
-
