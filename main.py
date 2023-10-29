@@ -103,43 +103,10 @@ datum = d['units']['h']
 
 ####################################
 ## collect data to table
-rows_list = []
-dates = dict()
-some_key = list(datum.keys())[0] ## первый  параметр в списке
-print('some_key:',  list(datum.keys()))
-for i in range(len(datum[some_key]['data'])): ## читать все строки
-    array = []
-    sectime = datum[some_key]['data'][i][0] // 1000
-    dt = datetime.utcfromtimestamp(sectime)
-    print(i, sectime, dt.strftime("%d.%m.%Y %H:%M")) #, end=' ')
-    array.append(sectime)
-    array.append(dt.strftime("%d.%m.%Y %H:%M"))
-    ## update set of dates
-    year  = array[1].split()[0][-4:]
-    month = array[1][3:5]
-    dates[year] = dates.get(year, set())
-    dates[year].add(month) 
 
-    ## fill row array with detectors data
-    for param in datum.keys():
-        #print(datum[param]['data'][i][1], end=' ')
-        array.append(datum[param]['data'][i][1])
-    #print("==>", array)
-
-    ## add row to the table rows_list
-    rows_list.append(array)
-
-print(dates)
-#print(*rows_list, sep="\n")
-##sys.exit("Test stop running")
-
-##  преобразовать данные в dataframe df
-colnames = datum.keys()
-colnames = ['timestamp', 'datetime'] + list(colnames)
-df = pd.DataFrame(rows_list, columns=colnames)
-
-##  reformat dataframe to standart columns
+colnames = ['timestamp', 'datetime'] + list(datum.keys())
 standart_columns = ['timestamp','datetime','CH4','CO','NO','NO2','OZ','PM10','PM2.5','SO2']
+columns = standart_columns[:]
 extra_columns = list(set(colnames) - (set(colnames) & set(standart_columns)))
 if extra_columns:
     text = f"Warning! New parameter in site {urlname} data: {extra_columns}"
@@ -148,14 +115,44 @@ if extra_columns:
     #print(columns)
     
 ##  create new dataframe with all columns
-# columns
+df = pd.DataFrame(columns=columns)
+dates = dict()  ##  like {'2023': {'10'}}
+
+some_key = list(datum.keys())[0] ## первый  параметр в списке
+print('column keys:',  list(datum.keys()))
+for i in range(len(datum[some_key]['data'])): ## читать все строки
+    array = dict()
+    sectime = datum[some_key]['data'][i][0] // 1000
+    dt = datetime.utcfromtimestamp(sectime)
+    #print(i, sectime, dt.strftime("%d.%m.%Y %H:%M")) #, end=' ')
+    array['timestamp'] = sectime
+    array['datetime']  = dt.strftime("%d.%m.%Y %H:%M")
+    
+    ## update set of dates
+    year  = array['datetime'].split()[0][-4:]
+    month = array['datetime'][3:5]
+    dates[year] = dates.get(year, set())
+    dates[year].add(month) 
+
+    ## fill row array with detectors data
+    for param in datum.keys():
+        array[param] = (datum[param]['data'][i][1])
+    #print("==>", array)
+
+    ## add row to the dataframe
+    #print(pd.Series(array))
+    df = pd.concat([df, pd.Series(array).to_frame().T], ignore_index=True)
+
+#print(dates)
+#print(df)
+##sys.exit("Test stop running")
+
 
 ####################################
 ##  read existing csv file and add new data to dataframe from csv file
 for year in dates:
     for month in dates[year]:
         ym_pattern = year + '_' + month
-        #print(ym_pattern, end=' ')
         filenamexls = dirname + ym_pattern + '_' + filename_prefix + ".xlsx"
         filenamecsv = dirname + ym_pattern + '_' + filename_prefix + ".csv"
 
@@ -186,10 +183,9 @@ for year in dates:
                 ##  read dataset from file
                 df0 = pd.read_csv(filenamecsv)
                 ##  добавить новые строки в конец датасета из файла, выбросить все повторяющиеся
-                dfsave = pd.concat([df0, dfsave], ignore_index=True)\
-                        .drop_duplicates() #subset=['timestamp'])\
-                        #.sort_values(by=['timestamp'])
-
+                dfsave = pd.concat([dfsave, df0], ignore_index=True)\
+                        .drop_duplicates()\
+                        .sort_values(by=['timestamp'])
                 newlines = dfsave.shape[0] - df0.shape[0]
                 action = "added"
             except:
@@ -208,9 +204,10 @@ for year in dates:
 
         ## save results to excel file
         if newlines:
-            dfsave.set_index('timestamp').to_excel(filenamexls)
-            dfsave.set_index('timestamp').to_csv(filenamecsv)
-            print(ym_pattern, newlines, " lines saved to", filenamecsv)
+            #print(dfsave)
+            dfsave.to_csv(  filenamecsv, index=False)
+            dfsave.to_excel(filenamexls, index=False, sheet_name=ym_pattern)
+            #print(ym_pattern, newlines, " lines saved to", filenamecsv)
 
             text = str(newlines) + " lines " + action + " to file " + filenamecsv
             print_message(text, '\n')
