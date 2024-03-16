@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime, date, time
 from urllib.request import urlopen
 import ssl
+import time
 
 import sys
 import os
@@ -70,20 +71,24 @@ else:
 ##  open url
 urlname = "https://mosecom.mos.ru/mgu/"
 try:
-    html = urlopen(urlname).read().decode('utf-8')
-except:
-    text = "No access to the site  " + urlname
+    try:
+        html = urlopen(urlname, timeout=60).read().decode('utf-8')
+    except:
+        time.sleep(5)
+        html = urlopen(urlname, timeout=60).read().decode('utf-8')
+except Exception as e:  #TimeoutError:
+    text = f"Message: error <<{e}>>:  No access to the site {urlname}"
     print_message(text, "\n")
-    ## send alarm to info channel by bot
-    write_to_bot(text)
+    write_to_bot(text) ## send alarm to info channel by bot
     
     ## работаем ли мы в питоне или notebook? 
-    sys.exit("No access to the site  " + urlname + "\n")
+    sys.exit(f"{text}\n")
 
 
 ####################################
 ##  parse html and find 'AirCharts.init' chart 
 soup = BeautifulSoup(html, 'html.parser')
+
 for link in soup.find_all('script'):
     w = str(link)
     if 'AirCharts' in w:
@@ -100,7 +105,14 @@ exec(comm) ## make dict d form string
 #print(type(d), list(key for key in d['units']['h'].keys()))
 
 datum = d['units']['h']
-
+if not datum:
+    text = f"No every hour data on the site {urlname}"
+    print_message(text, "\n")
+    write_to_bot(text) ## send alarm to info channel by bot
+    
+    ## работаем ли мы в питоне или notebook? 
+    sys.exit(f"{text}\n")
+    
 
 ####################################
 ## collect data to table
