@@ -12,19 +12,28 @@ from datetime import datetime
 ## make resample by three close measurements
 ############################################################################ 
 def average_by_three(datum):
-    if 'Date' in datum.columns:
-        datum['dt'] = datum['Date'] + ' ' + datum['Time (Moscow)']
-        fmt = '%Y/%m/%d %H:%M:%S'
+    if 'timestamp' in datum.columns:
+        datum = datum.rename(columns={"timestamp": "dt"}, errors="raise")
+        datum.set_index('dt', inplace=True)
+        datum.index = pd.to_datetime(datum.index, unit='s')
+        #datum['dt'] = datum['timestamp']
     else:
-        datum['dt'] = datum['datetime']
-        fmt = '%d.%m.%Y %H:%M'
+        if 'Date' in datum.columns:
+            datum['dt'] = datum['Date'] + ' ' + datum['Time (Moscow)']
+            fmt = '%Y/%m/%d %H:%M:%S'
+        else:
+            datum['dt'] = datum['datetime']
+            fmt = '%d.%m.%Y %H:%M'
+        datum.set_index('dt', inplace=True)
+        datum.index = pd.to_datetime(datum.index, format=fmt) # format='%m/%d%Y %-I%M%S %p'        
 
-    datum.set_index('dt', inplace=True)
-    datum.index = pd.to_datetime(datum.index, format=fmt) # format='%m/%d%Y %-I%M%S %p'
-
+    datum = datum.drop(['datetime'], axis=1)
+    #print(datum)
+        
     #return datum.resample("3T").sum().fillna().rolling(window=3, min_periods=1).mean()
-    #return datum.resample("3H").sum().rolling(window=3, min_periods=1).mean()
-    return datum.resample("3H").mean().rolling(window=3, min_periods=1).mean()
+    #return datum.resample("3H").mean().rolling(window=3, min_periods=1).mean()
+    return datum.resample("3h").mean()
+    #return datum.resample("3h").mean().rolling(window=3, min_periods=1).mean()
 
 
 ############################################################################
