@@ -11,33 +11,55 @@ from datetime import datetime, date, time, timezone
 from urllib.request import urlopen
 import ssl
 import time
-
 import sys
 import os
 import telebot
+import socket
+
 import config
 
 
+## ----------------------------------------------------------------
+##  
+## ----------------------------------------------------------------
 def select_year_month(datastring):
     return datastring.split()[0][-4:] + '_' + datastring[3:5]
 
+
+## ----------------------------------------------------------------
+##  write messageto logfile
+## ----------------------------------------------------------------
 def print_message(message, end=''):
     print(message)
     with open(logfilename,'a') as flog:
         flog.write(str(datetime.now()) + '   ')
         flog.write(message + end)
 
+
+## ----------------------------------------------------------------
+##  
+## ----------------------------------------------------------------
+def get_local_ip():
+    hostname = socket.gethostname()
+    local_ip = socket.gethostbyname(hostname)
+    return hostname, local_ip
+
+
 ## ----------------------------------------------------------------
 ##  write message to bot
 ## ----------------------------------------------------------------
 def write_to_bot(text):
     try:
+        hostname, local_ip = get_local_ip()
+        text = f"{hostname} ({local_ip}): {text}"
+        
         bot = telebot.TeleBot(config.token, parse_mode=None)
         bot.send_message(config.channel, text)
     except Exception as err:
         ##  напечатать строку ошибки
         text = f": ERROR in writing to bot: {err}"
         print_message(text)  ## write to log file
+
 
 
 ###################################################################
@@ -192,7 +214,7 @@ for year in dates:
         ## если файла с данными нет - запишем все в новый файл
         if nofile:
             newlines = dfsave.shape[0]
-            text = "Data file " + filenamecsv + " not found. New file created."
+            text = f"New data file {filenamecsv} created."
             print_message(text, "\n")
             ## send alarm to info channel by bot
             write_to_bot(text)
