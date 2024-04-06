@@ -1,6 +1,6 @@
-pandas
-matplotlib
-datetime
 beautifulsoup4
+datetime
+matplotlib
 openpyxl==3.0.9
+pandas
 pyTelegramBotAPI
