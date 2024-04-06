@@ -7,7 +7,7 @@
 ## import modules
 import pandas as pd
 from bs4 import BeautifulSoup
-from datetime import datetime, date, time
+from datetime import datetime, date, time, timezone
 from urllib.request import urlopen
 import ssl
 import time
@@ -136,7 +136,8 @@ print('column keys:',  list(datum.keys()))
 for i in range(len(datum[some_key]['data'])): ## читать все строки
     array = dict()
     sectime = datum[some_key]['data'][i][0] // 1000
-    dt = datetime.utcfromtimestamp(sectime)
+    #dt = datetime.utcfromtimestamp(sectime) #Deprecated
+    dt = datetime.fromtimestamp(sectime, timezone.utc)
     #print(i, sectime, dt.strftime("%d.%m.%Y %H:%M")) #, end=' ')
     array['timestamp'] = sectime
     array['datetime']  = dt.strftime("%d.%m.%Y %H:%M")
