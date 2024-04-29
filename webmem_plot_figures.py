@@ -197,6 +197,10 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
     columns.remove('PM10')
     columns.remove('PM2.5')
     #print(columns)
+    
+    params = ['CH4', 'CO', 'NO', 'NO2', 'OZ', 'SO2', 'H2S']
+    colors = ['red', "gray", "brown", "darkorange", "tan", "forestgreen", "dodgerblue", "blue", "black", "indigo"]
+    colors = {param:col for param, col in zip(params,colors)}
 
     ## get 2 days data
     xmin = datum.plotx.max() - pd.to_timedelta("48:01:00")  ##  2 days
@@ -206,7 +210,7 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
     xlims = (x.min(), x.max() + pd.to_timedelta("2:00:00"))
 
     ##########################
-    ## Figure1: ['CH4', 'CO', 'NO', 'NO2', 'OZ', 'SO2']
+    ## Figure1: 
     if nfigs == 1:
         fig = plt.figure(figsize=(16, 12))
         ax_1 = fig.add_subplot(3, 1, 1)
@@ -216,26 +220,25 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
 
     for i in range(len(columns)):
         wave = columns[i]   
-        #print(wave)
         y = data[wave].replace(np.nan, 0)
         #print(wave, y.shape, all(y.values), set(y.values))
         if not any(y.values):
             continue        
         y = data[wave].replace(0, np.nan)
+        color=colors.get(wave, "black")
+        
         ## plot
         if wave == 'CH4':
             y = y / 100
-            ax_1.plot(x, y, label=wave + ' / 100') #color='red',
+            ax_1.plot(x, y, label=f"{wave} / 100", color=color) #color='red',
         elif wave == 'CO':
             y = y / 10
-            ax_1.plot(x, y, label=wave + ' / 10')    
+            ax_1.plot(x, y, label=f"{wave} / 10", color=color)    
         elif wave == 'SO2':
             y = y * 10
-            ax_1.plot(x, y, label=wave + ' * 10')    
-        #elif i == 5:
-        #    ax_1.plot(x, y, color='black', label=wave)
+            ax_1.plot(x, y, label=f"{wave} * 10", color=color)    
         else:
-            ax_1.plot(x, y, label=wave)
+            ax_1.plot(x, y, label=wave, color=color)
 
     ax_1.set_xlim(xlims)
     ax_1.set_ylim(bottom=0)
@@ -337,17 +340,18 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
             continue        
 
         xx = data[wave].replace(0, np.nan)
+        color=colors.get(wave, "black")
         if wave == 'CH4':
             xx = xx / 100
-            ax_3.plot(xx.index, xx, label=wave + ' / 100') # color='red',
+            ax_3.plot(xx.index, xx, label=f"{wave} / 100", color=color) # color='red',
         elif wave == 'CO':
             xx = xx / 10
-            ax_3.plot(xx.index, xx, label=wave + ' / 10')
+            ax_3.plot(xx.index, xx, label=f"{wave} / 10", color=color)
         elif wave == 'SO2':
             xx = xx * 10
-            ax_3.plot(xx.index, xx, label=wave + ' * 10')
+            ax_3.plot(xx.index, xx, label=f"{wave} * 10", color=color)
         else:
-            ax_3.plot(xx.index, xx, label=wave)
+            ax_3.plot(xx.index, xx, label=wave, color=color)
 
     #ax_3.set_xlim(left=xx.index.min())
     #ax_3.set_xlim(left=xmin)
@@ -421,17 +425,22 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
 
 ## --------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
+    mem_station = "mgu"
+    
     debug_mode = False
     sep = get_folder_separator()
-    dirname = "." + sep + "data" + sep
-    path_to_figures = "." + sep + "figures" + sep
+    dirname = f".{sep}data{sep}"
+    path_to_figures = f".{sep}figures{sep}"
+    fig_prefix = f"web_{mem_station}"
     
     timestamp = str(datetime.now())[:7].replace('-', '_')    #'2022_11'  #'2022_06'
     if debug_mode:
         print("timestamp:", timestamp)
-    #filename = timestamp + '_mav_mos_mgu.xlsx'
-    filename = timestamp + '_mav_mos_mgu.csv'
+
+    #filename = timestamp + '_mav_mos_mgu.csv'
+    filename = f"{timestamp}_mav_mos_{mem_station}.csv" 
     xlsfilename = dirname + filename
+    
 
     ## check data file
     if not os.path.exists(xlsfilename):
@@ -453,8 +462,13 @@ if __name__ == "__main__":
         print(datum.head(2))
 
 
+    if "mgu" in mem_station:
+        mem_station = "MSU"
+    fig_prefix = f"web_{mem_station.lower()}"
+    ftitle = f"MEM_{mem_station}"
+    print(fig_prefix,ftitle) 
     # create four figures
-    plot_four_figures_from_excel(datum, path_to_figures, 4, name='web_msu')
+    plot_four_figures_from_excel(datum, path_to_figures, 4, name=fig_prefix, title=ftitle)
 
     # create one figure with four graphs
-    plot_four_figures_from_excel(datum, path_to_figures, 1, name='web_msu')
+    plot_four_figures_from_excel(datum, path_to_figures, 1, name=fig_prefix, title=ftitle)
