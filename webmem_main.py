@@ -65,7 +65,7 @@ def write_to_bot(text):
 ###################################################################
 ###################################################################
 dirname = './data/'
-filename_prefix = 'mav_mos_mgu'  
+filename_prefix = 'mav_mos_suxarevskaya'  
 logfilename = dirname + "_".join(["_".join(str(datetime.now()).split('-')[:2]), filename_prefix,  'log.txt'])
 print("now: ", datetime.now())
 
@@ -91,7 +91,8 @@ else:
 
 ####################################
 ##  open url
-urlname = "https://mosecom.mos.ru/mgu/"
+#urlname = "https://mosecom.mos.ru/mgu/"
+urlname = "https://mosecom.mos.ru/suxarevskaya-ploshhad/"
 try:
     try:
         html = urlopen(urlname, timeout=60).read().decode('utf-8')
@@ -140,7 +141,7 @@ if not datum:
 ## collect data to table
 
 colnames = ['timestamp', 'datetime'] + list(datum.keys())
-standart_columns = ['timestamp','datetime','CH4','CO','NO','NO2','OZ','PM10','PM2.5','SO2']
+standart_columns = ['timestamp','datetime','CH4','CO','NO','NO2','OZ','PM10','PM2.5','SO2','H2S']
 columns = standart_columns[:]
 extra_columns = list(set(colnames) - (set(colnames) & set(standart_columns)))
 if extra_columns:
