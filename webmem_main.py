@@ -17,6 +17,7 @@ import telebot
 import socket
 
 import config
+from webmem_config import *
 
 
 ## ----------------------------------------------------------------
@@ -64,8 +65,8 @@ def write_to_bot(text):
 
 ###################################################################
 ###################################################################
-dirname = './data/'
-filename_prefix = 'mav_mos_suxarevskaya'  
+
+
 logfilename = dirname + "_".join(["_".join(str(datetime.now()).split('-')[:2]), filename_prefix,  'log.txt'])
 print("now: ", datetime.now())
 
@@ -92,7 +93,7 @@ else:
 ####################################
 ##  open url
 #urlname = "https://mosecom.mos.ru/mgu/"
-urlname = "https://mosecom.mos.ru/suxarevskaya-ploshhad/"
+#urlname = "https://mosecom.mos.ru/suxarevskaya-ploshhad/"
 try:
     try:
         html = urlopen(urlname, timeout=60).read().decode('utf-8')
@@ -185,10 +186,13 @@ for i in range(len(datum[some_key]['data'])): ## читать все строк�
 
     ## add row to the dataframe
     df = pd.concat([df, pd.Series(array).to_frame().T], ignore_index=True)
-
-#print(dates)
-#print(df)
 ##sys.exit("Test stop running")
+
+
+####################################
+##  заменить столбцы - добавить к единицам измерения (mg/m3)
+newcolumns = dict(zip(df.columns[2:], [x + " (mg/m3)" for x in df.columns[2:]]))
+df = df.rename(columns=newcolumns)
 
 
 ####################################

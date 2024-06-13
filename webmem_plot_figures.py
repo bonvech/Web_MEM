@@ -193,12 +193,13 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
 
     columns = list(datum.columns[2:])
     columns.remove('plotx')
-    columns2 = ['PM10', 'PM2.5']
-    columns.remove('PM10')
-    columns.remove('PM2.5')
+    columns2 = ['PM10 (mg/m3)', 'PM2.5 (mg/m3)']
+    columns.remove(columns2[0])
+    columns.remove(columns2[1])
     #print(columns)
     
     params = ['CH4', 'CO', 'NO', 'NO2', 'OZ', 'SO2', 'H2S']
+    params = [col + " (mg/m3)" for col in params]
     colors = ['red', "gray", "brown", "darkorange", "tan", "forestgreen", "dodgerblue", "blue", "black", "indigo"]
     colors = {param:col for param, col in zip(params,colors)}
 
@@ -228,15 +229,21 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
         color=colors.get(wave, "black")
         
         ## plot
-        if wave == 'CH4':
-            y = y / 100
-            ax_1.plot(x, y, label=f"{wave} / 100", color=color) #color='red',
-        elif wave == 'CO':
+        if 'CH4' in wave:
+            coef = 50
+            y = y / coef
+            ax_1.plot(x, y, label=f"{wave} / {coef}", color=color) #color='red',
+        elif 'CO' in wave:
             y = y / 10
             ax_1.plot(x, y, label=f"{wave} / 10", color=color)    
-        elif wave == 'SO2':
-            y = y * 10
-            ax_1.plot(x, y, label=f"{wave} * 10", color=color)    
+        elif 'SO2' in wave:
+            coef = 30
+            y = y * coef
+            ax_1.plot(x, y, label=f"{wave} * {coef}", color=color) 
+        elif 'H2S' in wave:
+            coef = 30
+            y = y * coef
+            ax_1.plot(x, y, label=f"{wave} * {coef}", color=color)               
         else:
             ax_1.plot(x, y, label=wave, color=color)
 
@@ -269,11 +276,11 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
         fig = plt.figure(figsize=(10, 5))
         ax_2 = fig.add_subplot(1, 1, 1)
 
-    for wave in ['PM10', 'PM2.5']:
+    for wave in columns2:
         #print(wave)
         y = data[wave].replace(0, np.nan)
         #if i == 0:  # !!! "BCff"
-        if wave == 'PM10':
+        if 'PM10' in wave:
             color = 'dimgray'
         else:      
             color = 'mediumorchid'
@@ -341,15 +348,21 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
 
         xx = data[wave].replace(0, np.nan)
         color=colors.get(wave, "black")
-        if wave == 'CH4':
-            xx = xx / 100
-            ax_3.plot(xx.index, xx, label=f"{wave} / 100", color=color) # color='red',
-        elif wave == 'CO':
+        if 'CH4' in wave:
+            coef = 50
+            xx = xx / coef
+            ax_3.plot(xx.index, xx, label=f"{wave} / {coef}", color=color) # color='red',
+        elif 'CO' in wave:
             xx = xx / 10
             ax_3.plot(xx.index, xx, label=f"{wave} / 10", color=color)
-        elif wave == 'SO2':
-            xx = xx * 10
-            ax_3.plot(xx.index, xx, label=f"{wave} * 10", color=color)
+        elif 'SO2' in wave:
+            coef = 30
+            xx *= coef
+            ax_3.plot(xx.index, xx, label=f"{wave} * {coef}", color=color)
+        elif 'H2S' in wave:
+            coef = 30
+            xx *= coef
+            ax_3.plot(xx.index, xx, label=f"{wave} * {coef}", color=color)
         else:
             ax_3.plot(xx.index, xx, label=wave, color=color)
 
@@ -382,9 +395,9 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
         fig = plt.figure(figsize=(10, 5))
         ax_4 = fig.add_subplot(1, 1, 1)
 
-    for wave in ['PM10', 'PM2.5']:
+    for wave in columns2: #['PM10', 'PM2.5']:
         yy = data[wave].replace(0, np.nan)
-        if wave == 'PM10':
+        if 'PM10' in wave:
             color = 'dimgray'
         else:      
             color = 'mediumorchid'
@@ -425,20 +438,24 @@ def plot_four_figures_from_excel(datum, path_to_figures, nfigs=1, name='figure',
 
 ## --------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
-    mem_station = "mgu"
+    from webmem_config import *
     
     debug_mode = False
+    
     sep = get_folder_separator()
-    dirname = f".{sep}data{sep}"
+    if sep not in dirname:
+        nonsep = '\\' if 'ix' in os.name else '/' 
+        dirname = dirname.replace(nonsep, sep)
+    #dirname = f".{sep}data{sep}"
     path_to_figures = f".{sep}figures{sep}"
+
+    mem_station = filename_prefix.split("_")[-1]
     fig_prefix = f"web_{mem_station}"
     
     timestamp = str(datetime.now())[:7].replace('-', '_')    #'2022_11'  #'2022_06'
     if debug_mode:
         print("timestamp:", timestamp)
-
-    #filename = timestamp + '_mav_mos_mgu.csv'
-    filename = f"{timestamp}_mav_mos_{mem_station}.csv" 
+    filename = f"{timestamp}_{filename_prefix}.csv" 
     xlsfilename = dirname + filename
     
 
@@ -461,14 +478,15 @@ if __name__ == "__main__":
     if debug_mode:
         print(datum.head(2))
 
-
+    print(mem_station)
+    fig_prefix = f"web_{mem_station.lower()}"  ##  prefix for figure filename
     if "mgu" in mem_station:
-        mem_station = "MSU"
-    fig_prefix = f"web_{mem_station.lower()}"
-    ftitle = f"MEM_{mem_station}"
-    print(fig_prefix,ftitle) 
+        mem_station = mem_station.replace("mgu", "MSU")
+    ftitle = f"MEM_{mem_station}"    ## plot title
     # create four figures
     plot_four_figures_from_excel(datum, path_to_figures, 4, name=fig_prefix, title=ftitle)
 
     # create one figure with four graphs
     plot_four_figures_from_excel(datum, path_to_figures, 1, name=fig_prefix, title=ftitle)
+
+#x = input()

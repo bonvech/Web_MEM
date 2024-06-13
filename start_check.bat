@@ -1,10 +1,8 @@
 echo
 
 D:
-cd D:\AK\Web_MEM\
+cd D:\AK\Web_MEM\Web_MEM_MSU
 
 python webmem_main.py 
-rem  > logtest.txt
 python webmem_plot_figures.py
-
 pause
