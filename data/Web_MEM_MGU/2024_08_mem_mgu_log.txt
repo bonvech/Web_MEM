@@ -1,0 +1,154 @@
+2024-08-01 00:15:04.184344   1 lines added to file ./data/2024_07_mem_mgu.csv
+2024-08-01 01:15:03.853482   New data file ./data/2024_08_mem_mgu.csv created.
+2024-08-01 01:15:04.667614   1 lines written to file ./data/2024_08_mem_mgu.csv
+2024-08-01 01:15:04.673571   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 02:15:03.927784   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 02:15:03.973662   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 03:15:03.965540   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 03:15:03.972521   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 04:15:04.015829   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 04:15:04.021813   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 05:15:03.852251   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 05:15:03.925058   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 06:15:03.788899   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 06:15:03.918552   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 07:15:04.099812   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 07:15:04.160620   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 08:15:04.280066   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 08:15:04.295025   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 09:15:04.369549   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 09:15:04.380520   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 10:15:03.994672   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 10:15:04.048528   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 11:15:03.930395   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 11:15:04.004170   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 12:15:04.187274   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 12:15:04.308950   4 lines added to file ./data/2024_07_mem_mgu.csv
+2024-08-01 13:15:04.017379   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 13:15:04.068243   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 14:15:03.240514   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 14:15:03.246498   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 15:15:03.869958   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 15:15:03.915809   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 16:15:03.914864   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 16:15:03.962763   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 17:15:03.920940   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 17:15:03.926925   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 18:15:03.963076   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 18:15:03.969061   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 19:15:03.789053   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 19:15:03.846899   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 20:15:03.827188   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 20:15:03.874062   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 21:15:03.877121   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 21:15:03.925990   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 22:15:03.947721   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 22:15:03.954703   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-01 23:15:03.866122   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-01 23:15:03.872106   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 00:15:03.781627   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 00:15:03.789606   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 01:15:03.816793   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 01:15:03.824772   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 02:15:03.743858   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 02:15:03.799708   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 03:15:03.847473   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 03:15:03.855452   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 04:15:05.357123   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 04:15:05.364105   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 05:15:03.940599   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 05:15:03.991462   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 06:15:03.786164   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 06:15:03.841015   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 07:15:04.559195   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 07:15:04.614056   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 08:15:03.939716   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 08:15:03.991577   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 09:15:04.089307   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 09:15:04.095291   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 10:15:03.924293   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 10:15:03.934286   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 11:15:04.022672   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 11:15:04.083508   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 12:15:04.718761   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 12:15:04.766632   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 13:15:04.687978   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 13:15:04.693964   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 14:15:04.374875   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 14:15:04.381858   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 15:15:04.708135   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 15:15:04.714119   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 16:15:04.677498   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 16:15:04.729331   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 17:15:03.945036   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 17:15:03.951021   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 18:15:03.842926   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 18:15:03.897780   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 19:15:03.849325   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 19:15:03.902184   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 20:15:03.956686   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 20:15:04.029492   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 21:15:03.938551   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 21:15:03.944536   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 22:15:04.678554   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-02 22:15:04.697503   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 23:15:04.656557   No new data to add to file ./data/2024_07_mem_mgu.csv
+2024-08-02 23:15:04.715399   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 00:15:04.897321   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 01:15:04.744700   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 02:15:04.982183   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 03:15:03.958826   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 04:15:04.329423   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 05:15:03.976282   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 06:15:04.317302   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 07:15:04.693366   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 08:15:04.700992   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 09:15:04.620121   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 10:15:04.633368   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 11:15:05.010421   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 12:15:04.798257   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 13:15:03.865686   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 14:15:03.439539   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 15:15:03.947464   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 16:15:03.864460   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 17:15:04.073347   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 18:15:03.933704   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 19:15:04.126088   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 20:15:03.897851   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 21:15:04.052047   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 22:15:03.805457   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-03 23:15:04.093760   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 00:15:04.033230   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 01:15:04.053508   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 02:15:03.845024   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 03:15:03.814746   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 04:15:04.011548   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 05:15:04.041264   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 06:15:03.888862   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 07:15:03.983403   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 08:15:03.789096   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 09:15:03.832936   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 10:15:03.890412   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 11:15:03.782217   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 12:15:03.815292   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 13:15:03.774707   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 14:15:03.282190   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 15:15:03.847402   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 16:15:03.856263   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 17:15:03.844318   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 18:15:03.918251   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 19:15:03.973027   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 20:15:04.000658   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 21:15:03.969587   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 22:15:03.801950   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-04 23:15:03.973858   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-05 00:15:04.074630   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-05 01:15:03.986853   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-05 02:15:03.901954   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-05 03:15:03.910886   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-05 04:15:03.935555   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-05 05:15:03.961305   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-05 06:15:03.962104   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-05 07:15:03.965114   1 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-05 07:51:02.421569   45 lines added to file ./data/2024_08_mem_mgu.csv
+2024-08-05 08:15:03.949014   No new data to add to file ./data/2024_08_mem_mgu.csv
