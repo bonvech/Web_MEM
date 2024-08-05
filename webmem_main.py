@@ -28,7 +28,7 @@ def select_year_month(datastring):
 
 
 ## ----------------------------------------------------------------
-##  write messageto logfile
+##  write message to logfile
 ## ----------------------------------------------------------------
 def print_message(message, end=''):
     print(message)
@@ -158,21 +158,30 @@ dates = dict()  ##  like {'2023': {'10'}}
 some_key = list(datum.keys())[0] ## первый  параметр в списке
 print('column keys:',  list(datum.keys()))
 for i in range(len(datum[some_key]['data'])): ## читать все строки
-    array = dict()
-    sectime = datum[some_key]['data'][i][0] // 1000
+    ##  get timestamp and datetime
+    ##  old wrong timestamp - moscow time as utc
+    #sectime = datum[some_key]['data'][i][0] // 1000
+    ##  new 2024.08.05: correct timestamp by 3 hours
+    sectime = datum[some_key]['data'][i][0] // 1000 - 60 * 60 * 3
+    
+    ##  convert timestamp to datetime
     #dt = datetime.utcfromtimestamp(sectime) #Deprecated
-    dt = datetime.fromtimestamp(sectime, timezone.utc)
+    #dt = datetime.fromtimestamp(sectime, timezone.utc)  ## old wrong
+    dt = datetime.fromtimestamp(sectime)
+    
     #print(i, sectime, dt.strftime("%d.%m.%Y %H:%M")) #, end=' ')
+    
+    array = dict()
     array['timestamp'] = sectime
     array['datetime']  = dt.strftime("%d.%m.%Y %H:%M")
     
-    ## update set of dates
+    ##  update set of dates
     year  = array['datetime'].split()[0][-4:]
     month = array['datetime'][3:5]
     dates[year] = dates.get(year, set())
     dates[year].add(month) 
 
-    ## fill row array with detectors data
+    ##  fill row array with detectors data
     nulls = 0
     for param in datum.keys():
         value = datum[param]['data'][i][1]
@@ -184,13 +193,13 @@ for i in range(len(datum[some_key]['data'])): ## читать все строк�
     if len(datum.keys()) == nulls: 
         continue
 
-    ## add row to the dataframe
+    ##  add row to the dataframe
     df = pd.concat([df, pd.Series(array).to_frame().T], ignore_index=True)
 ##sys.exit("Test stop running")
 
 
 ####################################
-##  заменить столбцы - добавить к единицам измерения (mg/m3)
+##  заменить столбцы: добавить к единицам измерения (mg/m3)
 newcolumns = dict(zip(df.columns[2:], [x + " (mg/m3)" for x in df.columns[2:]]))
 df = df.rename(columns=newcolumns)
 
@@ -261,3 +270,5 @@ for year in dates:
         else:
             text = "No new data to add to file " + filenamecsv
             print_message(text, '\n')
+
+#x = input()
