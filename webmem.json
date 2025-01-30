@@ -1,0 +1,37 @@
+[
+    {
+        "urlname" : "https://mosecom.mos.ru/mgu/",
+        "dirname" : "./data/",
+        "filename_prefix" : "mem_mgu"
+    },
+    {
+        "urlname" : "https://mosecom.mos.ru/ostankino-0/",
+        "dirname" : "./data/",
+        "filename_prefix" : "mem_Ostankino"
+    },
+    {
+        "urlname" : "https://mosecom.mos.ru/suxarevskaya-ploshhad/",
+        "dirname" : "./data/",
+        "filename_prefix" : "mem_Suxarevskaya"
+    },
+    {
+        "urlname" : "https://mosecom.mos.ru/glebovskaya/",
+        "dirname" : "./data/",
+        "filename_prefix" : "mem_Glebovskaya"
+    },
+    {
+        "urlname" : "https://mosecom.mos.ru/zelenograd-6/",
+        "dirname" : "./data/",
+        "filename_prefix" : "mem_Zelenograd6"
+    },
+    {
+        "urlname" : "https://mosecom.mos.ru/zelenograd-11/",
+        "dirname" : "./data/",
+        "filename_prefix" : "mem_Zelenograd11"
+    },
+    {
+        "urlname" : "https://mosecom.mos.ru/zelenograd-16/",
+        "dirname" : "./data/",
+        "filename_prefix" : "mem_Zelenograd16"
+    }
+]
